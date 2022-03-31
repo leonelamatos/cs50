@@ -1,3 +1,25 @@
+:root {
+	--clr-darkGray: #6a6a6a;
+	--clr-veryDarkBlue: #333346;
+	--clr-veryLightBlue: #f0f5f9;
+}
+
 body {
-	color: rgb(163, 163, 163);
+	color: var(--clr-darkGray);
+}
+a:visited,
+a:link {
+	color: var(--clr-darkGray);
+}
+
+h2 {
+	color: var(--clr-veryDarkBlue);
+}
+
+.full-heigh {
+	min-height: calc(100vh - 170px);
+}
+
+.hero-section {
+	background-color: var(--clr-veryLightBlue);
 }
