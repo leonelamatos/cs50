@@ -1,6 +1,6 @@
 :root {
 	--clr-darkGray: #6a6a6a;
-	--clr-veryDarkBlue: #333346;
+	--clr-veryDarkBlue: #383c61;
 	--clr-veryLightBlue: #f0f5f9;
 	--clr-limeGreen: #25be73;
 	--bg-success: #25be73;
@@ -30,8 +30,23 @@ h2 {
 .text-success {
 	color: var(--clr-limeGreen) !important;
 }
+
+.ft-inner {
+	padding: 50px;
+	padding-top: 100px
+}
+
+/* .ft-tet */
 .fw-5 {
 	font-weight: 500;
+}
+
+.fw-6 {
+	font-weight: 600;
+}
+
+.fw-8 {
+	font-weight: 800;
 }
 .p-6 {
 	padding: 6rem 0;
