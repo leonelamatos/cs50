@@ -2,11 +2,15 @@
 	--clr-darkGray: #6a6a6a;
 	--clr-veryDarkBlue: #333346;
 	--clr-veryLightBlue: #f0f5f9;
+	--bg-success: #25be73;
+	--bg-primary: #3398da;
 }
 
 body {
 	color: var(--clr-darkGray);
+	font-family: 'Montserrat', sans-serif;
 }
+
 a:visited,
 a:link {
 	color: var(--clr-darkGray);
@@ -16,10 +20,44 @@ h2 {
 	color: var(--clr-veryDarkBlue);
 }
 
+.p-6 {
+	padding: 6rem 0;
+}
+
 .full-heigh {
 	min-height: calc(100vh - 170px);
 }
 
 .hero-section {
 	background-color: var(--clr-veryLightBlue);
+}
+
+.h2-heading {
+	/* font-size: 3rem; */
+	font-weight: 900;
+}
+
+.btn {
+	padding-inline: 3rem;
+	/* text-transform: uppercase; */
+}
+a.btn-outline-primary:hover,
+a.btn-outline-primary {
+	border: 3px solid var(--bg-primary);
+	color: var(--bg-primary);
+}
+
+a.btn-outline-primary:hover {
+	color: #fff;
+	background-color: var(--bg-primary);
+	border: 3px solid var(--bg-primary);
+}
+
+a.btn-success:hover,
+.btn-success {
+	background-color: var(--bg-success);
+	border: 3px solid var(--bg-success);
+}
+.btn-success:visited {
+	color: #fff;
 }
