@@ -2,6 +2,7 @@
 	--clr-darkGray: #6a6a6a;
 	--clr-veryDarkBlue: #333346;
 	--clr-veryLightBlue: #f0f5f9;
+	--clr-limeGreen: #25be73;
 	--bg-success: #25be73;
 	--bg-primary: #3398da;
 }
@@ -9,6 +10,10 @@
 body {
 	color: var(--clr-darkGray);
 	font-family: 'Montserrat', sans-serif;
+}
+
+p {
+	font-family: 'Open Sans';
 }
 
 a:visited,
@@ -19,7 +24,15 @@ a:link {
 h2 {
 	color: var(--clr-veryDarkBlue);
 }
-
+.no-inline-padding {
+	padding-inline: unset !important;
+}
+.text-success {
+	color: var(--clr-limeGreen) !important;
+}
+.fw-5 {
+	font-weight: 500;
+}
 .p-6 {
 	padding: 6rem 0;
 }
@@ -60,4 +73,27 @@ a.btn-success:hover,
 }
 .btn-success:visited {
 	color: #fff;
+}
+
+/* second section */
+.flex-40 {
+	flex: 0.4;
+}
+
+.gap-3 {
+	gap: 3rem;
+}
+
+.card-start {
+	background-color: #fff1e4;
+}
+
+.card-middle {
+	background-color: #f8f9fa;
+	
+}
+
+.card-end {
+	background-color: #f0f5f9;
+
 }
