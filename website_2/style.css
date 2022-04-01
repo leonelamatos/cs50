@@ -1,12 +1,12 @@
 :root {
 	--clr-darkBlue: #01306e;
 	--clr-gray: #5b5f64;
+	--clr-black: #333;
 }
 
 *,
 body {
 	color: var(--clr-darkBlue);
-	font-family: 'Source Sans Pro', sans-serif !important;
 	font-family: 'Source Sans Pro', sans-serif !important;
 }
 
@@ -19,17 +19,12 @@ h6 {
 	font-family: 'Source Sans Pro', sans-serif !important;
 }
 
-section {
-	/* position: relative;
-	z-index: -1; */
-}
-
 .fs-big {
 	font-size: 4.375rem;
 }
 
 .fs-medium {
-	font-size: rem;
+	font-size: 3rem;
 }
 
 .fw-5 {
@@ -52,9 +47,6 @@ section {
 .no-padding {
 	padding-inline: 0;
 }
-.py-10 {
-	padding: 10rem 0;
-}
 
 .text-navy-blue {
 	color: #3071fc;
@@ -62,6 +54,10 @@ section {
 
 .text-clr-gray {
 	color: var(--clr-gray);
+}
+
+.text-clr-black {
+	color: var(--clr-black);
 }
 
 .text-d-blue:visited {
@@ -80,6 +76,10 @@ section {
 	overflow: hidden;
 }
 
+.btn {
+	padding: 0.375rem 1.225rem;
+}
+
 .bs-1 {
 	box-shadow: rgba(17, 17, 26, 0.05) 0px 4px 16px, rgba(17, 17, 26, 0.05) 0px 8px 32px;
 }
@@ -91,12 +91,22 @@ section {
 	box-shadow: rgba(0, 0, 0, 0.03) 0px 1px 1px, rgba(0, 0, 0, 0.07) 0px 2px 2px, rgba(0, 0, 0, 0.03) 0px 4px 4px,
 		rgba(0, 0, 0, 0.03) 0px 8px 8px, rgba(0, 0, 0, 0.03) 0px 16px 16px;
 }
+.bs-4 {
+	box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+}
 .form {
 	padding: 4rem 20rem 2rem;
 }
 
+.no-inline-padding {
+	padding-inline: 0;
+}
+
 .p-relative {
 	position: relative;
+}
+.py-10 {
+	padding: 9rem 2rem;
 }
 .search-icon {
 	position: absolute;
@@ -120,4 +130,84 @@ section {
 .statistic__content {
 	max-width: 700px;
 	margin-inline: auto;
+}
+
+#courses-cat {
+	padding: 8rem 0;
+}
+
+#courses-cat h2 {
+	font-size: 2.75rem !important;
+	color: #333;
+}
+
+#courses-cat a {
+	background: #3270fc;
+	border-radius: 6px;
+	padding: 10px 26px;
+	line-height: 20px;
+	display: inline-block;
+	color: #fff;
+	font-weight: 600;
+	font-size: 1.2rem;
+	margin-bottom: 12px;
+	text-decoration: none;
+}
+#most-popular {
+	padding: 5rem;
+	background-color: #f5f5f5;
+}
+
+.btn-ligh {
+	background-color: #fff;
+}
+
+
+.user-1 {
+	background: url('assets/users/head-1.jpeg') no-repeat top center;
+
+}
+
+
+.user-2 {
+	background: url('assets/users/head-2.jpeg') no-repeat top center;
+
+}
+
+.user-3 {
+	background: url('assets/users/head-3.jpeg') no-repeat top center;
+
+}
+
+.user-4 {
+	background: url('assets/users/head-4.jpeg') no-repeat top center;
+
+}
+
+.user-5 {
+	background: url('assets/users/head-5.jpeg') no-repeat top center;
+
+}
+
+.user-6 {
+	background: url('assets/users/head-6.jpeg') no-repeat top center;
+
+}
+.user-avatar {
+	background-size: cover;
+	width: 35px;
+	height: 35px;
+	border-radius: 50%;
+}
+
+.no-margin {
+	margin: 0;
+}
+
+.icon {
+
+}
+
+.bi-star.icon {
+	color: #ffa439;
 }
