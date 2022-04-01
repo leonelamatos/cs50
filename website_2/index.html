@@ -6,15 +6,17 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 		<link
-			href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700;800&family=Open+Sans:wght@300;400;600;700&display=swap"
+			href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700;800&family=Open+Sans:wght@300;400;600;700&family=Source+Sans+Pro:wght@300;400;600;700;900&display=swap"
 			rel="stylesheet"
 		/>
+
 		<link
 			href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
 			rel="stylesheet"
 			integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
 			crossorigin="anonymous"
 		/>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" />
 
 		<link rel="stylesheet" href="style.css" />
 
@@ -26,22 +28,66 @@
 		></script>
 		<title>Home | Schooling</title>
 	</head>
+
 	<body>
-		<header class="py-3 bg-header bs">
+		<header class="py-3 bg-header bs-1">
 			<nav class="navbar">
 				<div class="container">
 					<h1 class="navbar-brand fw-8 fs-2">Echooling.</h1>
-					<ul class="nav fs-5">
-						<li class="nav-item mx-3"><a class="nav-link" href="">Courses</a></li>
-						<li class="nav-item mx-3"><a class="nav-link" href="">Instructors</a></li>
-						<li class="nav-item mx-3"><a class="nav-link" href="">Blog</a></li>
-						<li class="nav-item mx-3"><a class="nav-link" href="">Contact</a></li>
+					<ul class="nav fs-6 fw-6">
+						<li class="nav-item mx-3"><a class="nav-link text-d-blue" href="">Courses</a></li>
+						<li class="nav-item mx-3"><a class="nav-link text-d-blue" href="">Instructors</a></li>
+						<li class="nav-item mx-3"><a class="nav-link text-d-blue" href="">Blog</a></li>
+						<li class="nav-item mx-3"><a class="nav-link text-d-blue" href="">Contact</a></li>
 						<li class="nav-item mx-3">
-							<form class="d-flex"><input type="text" class="form-control" placeholder="Search Courses" /></form>
+							<form class="d-flex">
+								<input type="text" class="form-control" placeholder="Search Courses" />
+							</form>
 						</li>
 					</ul>
 				</div>
 			</nav>
 		</header>
+
+		<section class="hero bg-hero py-10 d-flex flex-column align-items-center p-relative">
+			<div class="container">
+				<h2 class="text-align-center fs-big text-center ls-3">
+					Learn Course Online<br /><span class="text-navy-blue">New Today</span>
+				</h2>
+				<!-- <h3>New Today</h3> -->
+
+				<div class="d-flex flex-column align-items-center">
+					<form action="" class="d-flex form w-100">
+						<div class="input-wrapper w-100 p-relative">
+							<img src="assets/user-bg.png"class="bi bi-search search-icon"/>
+							<input class="form-control search-form bs-2" placeholder="Search Course" />
+						</div>
+					</form>
+					<p>Have questions? <span class="text-navy-blue">Get free examples -></span></p>
+				</div>
+				<div class="statistic__content py-5">
+					<ul class="list-unstyled row">
+						<li class="list-item d-flex gap-4 col no-padding">
+							<div class="">
+								<img src="assets/user-bg.png" class=""/>
+							</div>
+							<div class="text-wrapper w-200p">
+								<h2 class="fs-bold fs-1 fw-7">9.4k+</h2>
+								<p class="text-clr-gray">Total active students taking gifted courses.</p>
+							</div>
+						</li>
+						<li class="list-item d-flex gap-4 col no-padding">
+							<div class="">
+								<img src="assets/graph-bg.png" class=""/>
+							</div>
+							<div class="text-wrapper w-200p">
+								<h2 class="fs-bold fs-1 fw-7">70+</h2>
+								<p class="text-clr-gray">Available field programs gifted courses.</p>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</section>
 	</body>
 </html>

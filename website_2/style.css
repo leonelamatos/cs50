@@ -1,20 +1,123 @@
 :root {
-    --clr-darkBlue: #01306e;
+	--clr-darkBlue: #01306e;
+	--clr-gray: #5b5f64;
 }
 
 *,
 body {
-    color: var(--clr-darkBlue);
+	color: var(--clr-darkBlue);
+	font-family: 'Source Sans Pro', sans-serif !important;
+	font-family: 'Source Sans Pro', sans-serif !important;
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-family: 'Source Sans Pro', sans-serif !important;
+}
+
+section {
+	/* position: relative;
+	z-index: -1; */
+}
+
+.fs-big {
+	font-size: 4.375rem;
+}
+
+.fs-medium {
+	font-size: rem;
+}
+
+.fw-5 {
+	font-weight: 500;
+}
+.fw-6 {
+	font-weight: 600;
+}
+.fw-7 {
+	font-weight: 700;
+}
 .fw-8 {
-    font-weight: 800;
+	font-weight: 800;
+}
+
+.ls-3 {
+	letter-spacing: 3px;
+}
+
+.no-padding {
+	padding-inline: 0;
+}
+.py-10 {
+	padding: 10rem 0;
+}
+
+.text-navy-blue {
+	color: #3071fc;
+}
+
+.text-clr-gray {
+	color: var(--clr-gray);
+}
+
+.text-d-blue:visited {
+	color: var(--clr-darkBlue);
 }
 
 .bg-header {
-    /* background-color: #3ee; */
+	position: relative;
+	z-index: 9999;
+	background-color: #fff;
 }
 
-.bs {
-box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+.bg-hero {
+	background: url('assets/bg2.png') no-repeat center top;
+	background-size: cover;
+	overflow: hidden;
+}
+
+.bs-1 {
+	box-shadow: rgba(17, 17, 26, 0.05) 0px 4px 16px, rgba(17, 17, 26, 0.05) 0px 8px 32px;
+}
+.bs-2 {
+	box-shadow: #81879747 0px 26px 33px -4px;
+}
+
+.bs-3 {
+	box-shadow: rgba(0, 0, 0, 0.03) 0px 1px 1px, rgba(0, 0, 0, 0.07) 0px 2px 2px, rgba(0, 0, 0, 0.03) 0px 4px 4px,
+		rgba(0, 0, 0, 0.03) 0px 8px 8px, rgba(0, 0, 0, 0.03) 0px 16px 16px;
+}
+.form {
+	padding: 4rem 20rem 2rem;
+}
+
+.p-relative {
+	position: relative;
+}
+.search-icon {
+	position: absolute;
+	right: 20px;
+	top: 15px;
+	width: 32px;
+	height: 32px;
+	font-size: 24px;
+}
+.search-form {
+	padding: 1.2rem;
+	border-left: 5px solid #3071fc;
+	border-radius: unset;
+	/* box-shadow: rgba(0, 0, 0, 0.1) 0px 20px 25px -5px, rgba(0, 0, 0, 0.04) 0px 10px 10px -5px; */
+}
+
+.w-200p {
+	max-width: 200px;
+}
+
+.statistic__content {
+	max-width: 700px;
+	margin-inline: auto;
 }
