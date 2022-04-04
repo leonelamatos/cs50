@@ -19,8 +19,12 @@ h4,
 h5,
 h6 {
 	font-family: 'Source Sans Pro', sans-serif !important;
+	margin-bottom: 0;
 }
 
+img {
+	max-width: 100%;
+}
 a:visited {
 	color: var(--clr-lightGray);
 }
@@ -88,7 +92,7 @@ a:visited {
 }
 
 .bg-hero {
-	background: url('assets/bg2.png') no-repeat center top;
+	background: url('assets/images/bg2.png') no-repeat center top;
 	background-size: cover;
 	overflow: hidden;
 }
@@ -112,7 +116,7 @@ a:visited {
 	box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
 }
 .form {
-	padding: 4rem 20rem 2rem;
+	padding: 3rem 20rem 2rem;
 }
 
 .no-inline-padding {
