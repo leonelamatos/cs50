@@ -1,7 +1,7 @@
 :root {
 	--clr-darkBlue: #01306e;
 	--clr-gray: #5b5f64;
-	--clr-lightGray: #9fa4ac;
+	--clr-lightGray: #c4c4c4;
 	--clr-black: #333;
 	--clr-white: #fff;
 }
@@ -283,6 +283,11 @@ a:visited {
 .carousel-control-next-icon,
 .carousel-control-prev-icon {
 	width: 20px;
+}
+
+footer {
+	margin-top: 15rem;
+	padding-top: 10rem;
 }
 
 .footer-top-bg {
