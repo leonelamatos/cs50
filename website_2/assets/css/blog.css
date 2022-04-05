@@ -2,6 +2,10 @@ body {
 	background-color: #f2f4f9;
 }
 
+#blog-container {
+	margin-top: 5rem;
+}
+
 .hero {
 	/* background: url('../assets/images/hero-img.jpg') no-repeat top center; */
 	background-size: auto;
@@ -32,37 +36,25 @@ body {
 	transform: translateY(-50%); */
 }
 
-#event-container {
-	margin-top: 10rem;
+i.fa-brands {
+	font-family: 'Font Awesome 6 Brands' !important;
 }
 
-i.fa-regular,
 i.fa-solid {
 	font-family: 'Font Awesome 6 Free' !important;
+	color: var(--clr-gray);
 }
-a i {
-	transition: color 0.3s ease;
+
+i.fa-arrow-right {
+	color: var(--clr-darkBlue);
 }
 
 a.btn {
-	border-color: var(--clr-lightGray);
-}
-a:visited {
 	color: var(--clr-darkBlue);
+	border-color: var(--clr-lightGray);
+	border-width: 2px;
 }
-a:hover i {
+
+a.btn:hover i {
 	color: #fff;
-}
-
-.card {
-	padding: 2rem;
-}
-.card-title {
-	font-size: 3rem;
-	color: #3270fc;
-	margin-bottom: 0;
-}
-
-.card-time {
-	color: #3270fc;
 }

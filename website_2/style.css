@@ -1,7 +1,7 @@
 :root {
 	--clr-darkBlue: #01306e;
-	--clr-gray: #5b5f64;
-	--clr-lightGray: #c4c4c4;
+	--clr-gray: #8f8f8fd3;
+	--clr-lightGray: #d6d6d6be;
 	--clr-black: #333;
 	--clr-white: #fff;
 }
@@ -59,11 +59,14 @@ a:visited {
 }
 
 .no-padding {
-	padding-inline: 0;
+	padding: 0 !important;
 }
 
 .text-navy-blue {
 	color: #3071fc;
+}
+.text-dark-blue {
+	color: var(--clr-darkBlue);
 }
 
 .text-clr-gray {
