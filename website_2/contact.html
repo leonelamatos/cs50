@@ -20,7 +20,7 @@
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
 		<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/brands.min.css" /> -->
 
-		<link rel="stylesheet" href="assets/css/blog.css" />
+		<link rel="stylesheet" href="assets/css/contact.css" />
 		<link rel="stylesheet" href="style.css" />
 		<link rel="stylesheet" href="assets/css/mediaQueries.css" />
 
@@ -30,6 +30,9 @@
 			crossorigin="anonymous"
 			defer
 		></script>
+
+		<!-- Async script executes immediately and must be after any DOM elements used in callback. -->
+
 		<title>Ecooling | Blog</title>
 	</head>
 	<body>
@@ -43,7 +46,7 @@
 							<a class="nav-link text-d-blue" href="instructors.html">Instructors</a>
 						</li>
 						<li class="nav-item mx-3"><a class="nav-link text-d-blue" href="events.html">Events</a></li>
-						<li class="nav-item mx-3"><a class="nav-link text-d-blue" href="">Blog</a></li>
+						<li class="nav-item mx-3"><a class="nav-link text-d-blue" href="blog.html">Blog</a></li>
 						<li class="nav-item mx-3"><a class="nav-link text-d-blue" href="">Contact</a></li>
 						<li class="nav-item mx-3">
 							<form class="d-flex">
@@ -65,8 +68,91 @@
 		</section>
 		<!-- end events hero -->
 
-		<section id="blog-container" class="container mb-5">
-			<div class="row"></div>
+		<section id="contact-container" class="container mb-5 py-5">
+			<div class="row">
+				<div class="col-5 contact-text">
+					<div class="contact-text_content">
+						<div class="contact-text__address row mb-5">
+							<div class="icon col-2"><i class="fa-regular fa-building fa-2xl"></i></div>
+							<div class="text col-10">
+								<h4>Address</h4>
+								<p>1800 Abbot Kinney Blvd. Unit D<br />& E Venice</p>
+							</div>
+						</div>
+						<div class="contact-text__numbers row mb-5">
+							<div class="icon col-2">
+								<i class="fa-solid fa-phone-volume fa-2xl"></i>
+							</div>
+							<div class="text col-10">
+								<h4>Contact</h4>
+								<p class="mb-1">Mobile: (+88) - 1990 - 6886</p>
+								<p>Mail: contact@echooling.com</p>
+							</div>
+						</div>
+						<div class="contact-text__hours row">
+							<div class="icon col-2">
+								<i class="fa-solid fa-calendar-days fa-2xl"></i>
+							</div>
+							<div class="text col-10">
+								<h4>Hour of operation</h4>
+								<p class="mb-1">Monday - Friday: 09:00 - 20:00</p>
+								<p>Sunday & Junday: 10:30 - 22:00</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-7 form-content">
+					<div class="form-content_header row g-4 ms-5 fw-6">
+						<div class="form-content-header_title mb-5">
+							<h2 class="fw-bold">Question?<br />Feel free to contact us.</h2>
+						</div>
+					</div>
+
+					<form class="row g-4 ms-5">
+						<div class="col-md-6">
+							<label for="inputName" class="form-label" aria-hidden="true">Name</label>
+							<input type="text" class="form-control form-control-lg" id="inputName" placeholder="Name" />
+						</div>
+						<div class="col-md-6">
+							<label for="inputEmail" class="form-label" aria-hidden="true">Email</label>
+							<input type="email" class="form-control" id="inputEmail" placeholder="Email" />
+						</div>
+						<div class="col-6">
+							<label for="inputSubject" class="form-label" aria-hidden="true">Subject</label>
+							<input type="text" class="form-control" id="inputSubject" placeholder="Subject" />
+						</div>
+						<div class="col-6">
+							<label for="inputPhone" class="form-label" aria-hidden="true">Phone</label>
+							<input type="text" class="form-control" id="inputPhone" placeholder="Phone" />
+						</div>
+
+						<div class="col-md-12">
+							<label for="messageTextArea" class="form-label">Message</label>
+							<textarea
+								class="form-control"
+								id="messageTextArea"
+								rows="4"
+								placeholder="Message"
+							></textarea>
+						</div>
+
+						<div class="col-12">
+							<button type="submit" class="btn btn-primary px-5 py-3 fw-6">Send Message</button>
+						</div>
+					</form>
+				</div>
+			</div>
+			<div id="map" class="row">
+				<iframe
+					src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2483.5404230619192!2d-0.12174774810221597!3d51.50330061872307!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x487604b900d26973%3A0x4291f3172409ea92!2slastminute.com%20London%20Eye!5e0!3m2!1sen!2sus!4v1649273013576!5m2!1sen!2sus"
+					width="800"
+					height="600"
+					style="border: 0"
+					allowfullscreen=""
+					loading="lazy"
+					referrerpolicy="no-referrer-when-downgrade"
+				></iframe>
+			</div>
 		</section>
 
 		<footer class="p-relative" style="background-color: #0f1216; color: #fff" class>
@@ -132,5 +218,10 @@
 				</div>
 			</div>
 		</footer>
+
+		<!-- <script
+			src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBei84hvMnKqrTIOR_AYzifJkhnzoBjrco&callback=initMap&v=weekly"
+			async
+		></script> -->
 	</body>
 </html>
