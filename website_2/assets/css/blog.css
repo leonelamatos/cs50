@@ -40,6 +40,7 @@ i.fa-brands {
 	font-family: 'Font Awesome 6 Brands' !important;
 }
 
+i.fa-regular,
 i.fa-solid {
 	font-family: 'Font Awesome 6 Free' !important;
 	color: var(--clr-gray);
@@ -57,4 +58,117 @@ a.btn {
 
 a.btn:hover i {
 	color: #fff;
+}
+
+/*  Search column */
+
+#recent-post .card {
+	box-shadow: rgba(0, 0, 0, 0.1) -4px 9px 25px -6px;
+	border: none;
+}
+
+#blog-search {
+	border-bottom: 1px solid var(--clr-gray-300);
+}
+
+#blog-search .form-control {
+	background: var(--clr-gray-300);
+	border-color: transparent;
+	padding: 0.75rem;
+}
+#blog-search .form-control:focus {
+	border-color: transparent;
+	background: var(--clr-gray-300);
+	box-shadow: none;
+}
+
+#blog-search i.fa-magnifying-glass {
+	position: absolute;
+	top: 25px;
+	right: 20px;
+	color: var(--clr-darkBlue);
+}
+
+/* .category li, */
+.card-list li {
+	padding-right: 0;
+	padding-left: 0;
+}
+
+.post-img {
+	width: 100px;
+	float: left;
+	padding-right: 15px;
+}
+.post-img img {
+	border-radius: 5px;
+}
+
+.post-desc a {
+	display: block;
+	letter-spacing: 0.3px;
+	line-height: 25px;
+	text-decoration: none;
+}
+
+.post-desc a:visited,
+.post-desc a:link {
+	color: var(--clr-darkBlue);
+}
+
+.date-post {
+	display: block;
+	color: var(--clr-gray);
+}
+
+#recent-post .category {
+	border-top: 1px solid var(--clr-gray-300);
+}
+
+.category .list-group-item {
+	border: none;
+	cursor: pointer;
+}
+
+.category ul li:after {
+	content: '\f105';
+	font-family: FontAwesome;
+	font-style: normal;
+	font-weight: 400;
+	text-decoration: inherit;
+	position: absolute;
+	left: 0;
+	/* top: 0; */
+	color: #3270fc;
+}
+
+.bg-verylight-blue {
+	background-color: #f2f4f9;
+}
+
+#blog-search.p-5,
+.card-list.p-5,
+.category.p-5,
+.tags.p-5 {
+	padding: 2.1875rem !important;
+}
+
+.tags {
+	border-top: 1px solid var(--clr-gray-300);
+}
+
+.tags_cloud .bg-light,
+.tags_cloud a {
+	border: none;
+	border-color: transparent;
+	padding: 6px 12px;
+	font-size: 14px;
+	line-height: 20px;
+	border: 1px solid #f0f0f0;
+	border-radius: 5px;
+}
+
+.tags_cloud .bg-light:hover,
+.tags_cloud .btn-primary:hover {
+	background-color: #3270fc !important;
 }
