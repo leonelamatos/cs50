@@ -13,7 +13,7 @@
 }
 
 .hero-img {
-	background: url('../assets/images/hero-img.jpg') no-repeat top center;
+	background: url('../images/hero-img.jpg') no-repeat top center;
 	background-size: cover;
 }
 
