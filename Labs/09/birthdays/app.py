@@ -28,14 +28,44 @@ def index():
     if request.method == "POST":
 
         # TODO: Add the user's entry into the database
+        name = request.form.get("name")
+        month = request.form.get("month")
+        day = request.form.get("day")
+        db.execute(
+            "INSERT INTO birthdays(name, month, day) VALUES(?,?,?)", name, month, day)
 
         return redirect("/")
 
     else:
 
         # TODO: Display the entries in the database on index.html
+        friends = db.execute("SELECT * FROM birthdays;")
 
-        return render_template("index.html")
+        return render_template("index.html", friends=friends)
 
-if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5000)
+
+@app.route('/delete', methods=["POST"])
+def delete_friend():
+    friend_id = request.form.get('id')
+    if friend_id:
+        db.execute('DELETE FROM birthdays WHERE id=?', friend_id)
+    return redirect('/')
+
+
+@app.route('/edit', methods=["GET", "POST"])
+def edit_friend_birthday():
+    id = request.args.get('id')
+    if request.method == 'GET':
+        edit_field = db.execute('SELECT * FROM birthdays WHERE id=?', id)
+
+        print(edit_field)
+        return render_template('edit.html', edit=edit_field)
+    else:
+        name = request.form.get('name')
+        month = request.form.get('month')
+        day = request.form.get('day')
+
+        db.execute(
+            "UPDATE birthdays SET name=?, month=?, day=? WHERE id=?", name, month, day, id)
+
+        return redirect('/')
