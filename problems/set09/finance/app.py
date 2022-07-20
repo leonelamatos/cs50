@@ -1,12 +1,12 @@
 import os
 
 from cs50 import SQL
-from flask import Flask, flash, redirect, render_template, request, session
+from flask import Flask, flash, redirect, render_template, request, session, jsonify, json
 from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from helpers import apology, login_required, lookup, usd, create_table,search_symbol
+from helpers import apology, login_required, lookup, usd, create_table, condition
 
 # Configure application
 app = Flask(__name__)
@@ -44,8 +44,8 @@ def after_request(response):
 def index():
     """Show portfolio of stocks"""
 
-    symbols = search_symbol('peps')
-    return render_template('home.html', usd=usd, symbols=symbols)
+    # symbols = search_symbol('peps')
+    return render_template('home.html', usd=usd)
 
 
 @app.route("/buy", methods=["GET", "POST"])
@@ -114,7 +114,7 @@ def logout():
 @login_required
 def quote():
     """Get stock quote."""
-    return apology("TODO")
+    return render_template('quote.html', query='this is a test' )
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -142,3 +142,20 @@ def register():
 def sell():
     """Sell shares of stock"""
     return apology("TODO")
+
+
+@app.route("/search", methods=["GET"])
+@login_required
+def search():
+    """search shares of stock"""
+    query = request.args.get('q')
+    with open('symbols.json', 'r') as f:
+        data = json.load(f)
+        if query:
+            result = [c for c in data["result"] if  query.upper() in c['s'] ]
+            f.close()
+            return jsonify(result)
+        
+    return jsonify(data["result"])
+
+
