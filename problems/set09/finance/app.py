@@ -6,7 +6,7 @@ from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from helpers import apology, login_required, lookup, usd
+from helpers import apology, login_required, lookup, usd, create_table,search_symbol
 
 # Configure application
 app = Flask(__name__)
@@ -43,12 +43,15 @@ def after_request(response):
 @login_required
 def index():
     """Show portfolio of stocks"""
-    return render_template('home.html', usd=usd)
+
+    symbols = search_symbol('peps')
+    return render_template('home.html', usd=usd, symbols=symbols)
 
 
 @app.route("/buy", methods=["GET", "POST"])
 @login_required
 def buy():
+    print(lookup('amzn'))
     """Buy shares of stock"""
     return apology("TODO")
 
