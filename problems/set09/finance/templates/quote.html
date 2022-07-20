@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Log In
+{% endblock %}
+
+{% block main %}
+    <form autocomplete="off" action="/quote" method="post">
+        <div class="mb-3">
+            <input autofocus class="form-control mx-auto w-auto" id="quote" name="quote" placeholder="Type symbol to quote" type="search" oninput="showResult(this.value)">
+        </div>
+        <ul id="result"></ul>
+
+       
+        <button class="btn btn-primary" type="submit">Quote</button>
+    </form>
+    
+    <script>
+       
+       function showResult(val){
+        let res = document.getElementById('result');
+        res.innerHTML = ''
+        if(val == '') return;
+
+        let list = '';
+        fetch('/search?q=' + val).then(
+            response => response.json()
+        ).then(data=>{
+            data.forEach(element => {
+                const companyInfo = {s: element.s, n: element.n, i: element.i}
+                list += `<li onclick="setValue(element)"> ${element['s']} <span class="fs-6">${element['n']}</span></li>`
+                // res.innerHTML = element.s
+                // console.log(element.s)
+            });
+            res.innerHTML = list;
+            return true
+        }).catch(err=>{console.warn('Something went wrong', err); return false})
+
+       }
+
+       function setValue(e){
+        console.log('element click', e)
+       }
+       
+    </script>
+{% endblock %}
