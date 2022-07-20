@@ -1,7 +1,3 @@
-/* body {
-    background-color: #f7f8fb;
-} */
-
 
 /* Size for brand */
 nav .navbar-brand
@@ -25,4 +21,24 @@ nav .navbar-brand .yellow
 nav .navbar-brand .green
 {
     color: #2e944b;
+}
+
+/*  autocomplete result div */
+#result {
+    border: 1px solid #ccc;
+    padding: 3px;
+}
+
+#result ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+#result ul li {
+    padding: 5px 0;
+
+}
+
+#result ul li:hover {
+    background-color: #eee;
 }
