@@ -2,7 +2,7 @@ import os
 import requests
 import urllib.parse
 
-from flask import redirect, render_template, request, session
+from flask import redirect, render_template, request, session, jsonify
 from functools import wraps
 
 
@@ -82,11 +82,34 @@ def create_table(db):
     )
 
 
-def search_symbol(query):
-    try:
-        api_key = os.environ.get("API_ACCESS_KEY")
-        url = f'https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords={query}&apikey={api_key}'
-        response = requests.get(url)
-        return response.json()
-    except  (KeyError, TypeError, ValueError):
-        return None
+def condition(dic, q):
+    return dic['s'] == q
+
+
+
+
+
+
+
+
+
+# def search_symbol(query):
+#     try:
+#         api_key = os.environ.get("API_ACCESS_KEY")
+#         url = f'https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords={query}&apikey={api_key}'
+#         response = requests.get(url)
+#         response.raise_for_status()
+#     except requests.RequestException:
+#         return None
+
+#     try:
+#         raw_query = response.json()
+#         query = raw_query["bestMatches"]
+#         filtered =  [c for c in query if condition(c)]
+#         return filtered
+        
+#     except  (KeyError, TypeError, ValueError):
+#         return None
+
+
+# 
