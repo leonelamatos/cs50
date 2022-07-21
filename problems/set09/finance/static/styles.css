@@ -24,21 +24,47 @@ nav .navbar-brand .green
 }
 
 /*  autocomplete result div */
-#result {
-    border: 1px solid #ccc;
-    padding: 3px;
+
+.hide-scroll::-webkit-scrollbar {
+display: none;
 }
 
-#result ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-}
-#result ul li {
-    padding: 5px 0;
-
+.hide-scroll{
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
 
-#result ul li:hover {
-    background-color: #eee;
+.list-group-item{
+    
+    cursor: pointer;
+    border-left: 1px solid rgba(0,0,0,.125) !important;
+    border-right: 1px solid rgba(0,0,0,.125) !important;
+}
+.list-group-item h6 {
+    margin-bottom: .5rem;
+
+}
+    .list-group-item:hover{
+    background-color: rgb(246, 246, 246);
+ }
+
+.list-group-item:last-child{
+    /* background-color: #537fbe; */
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-bottom: 1px solid rgba(0,0,0,.125) !important;
+
+    
+}
+
+small.text-secundary{
+    font-size: .7rem;
+}
+
+.hide {
+    display: none;
+}
+
+.show {
+    display: block;
 }
