@@ -114,7 +114,10 @@ def logout():
 @login_required
 def quote():
     """Get stock quote."""
-    return render_template('quote.html', query='this is a test' )
+    if request.method == 'GET':
+        with open('symbols.json', 'r') as f:
+            data = json.load(f)
+    return render_template('quote.html', data=data )
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -142,20 +145,5 @@ def register():
 def sell():
     """Sell shares of stock"""
     return apology("TODO")
-
-
-@app.route("/search", methods=["GET"])
-@login_required
-def search():
-    """search shares of stock"""
-    query = request.args.get('q')
-    with open('symbols.json', 'r') as f:
-        data = json.load(f)
-        if query:
-            result = [c for c in data["result"] if  query.upper() in c['s'] ]
-            f.close()
-            return jsonify(result)
-        
-    return jsonify(data["result"])
 
 
