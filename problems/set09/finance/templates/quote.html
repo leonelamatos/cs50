@@ -1,46 +1,96 @@
 {% extends "layout.html" %}
 
-{% block title %}
-    Log In
-{% endblock %}
+<!-- {% block script %}
+<script src="/static/main.js" async></script>
+{% endblock %} -->
 
-{% block main %}
-    <form autocomplete="off" action="/quote" method="post">
-        <div class="mb-3">
-            <input autofocus class="form-control mx-auto w-auto" id="quote" name="quote" placeholder="Type symbol to quote" type="search" oninput="showResult(this.value)">
-        </div>
-        <ul id="result"></ul>
+{% block title %} Log In {% endblock %} {% block main %}
+<form
+	autocomplete="off"
+	action="/quote"
+	method="post"
+	class="container bg-white position-relative"
+	style="width: 400px;"
+>
+	<div class="row">
+		<div class="col-md m-auto px-0">
+			<div class="form-group">
+				<input
+					autofocus
+					class="form-control form-control-lg"
+					id="search"
+					name="quote"
+					placeholder="Type symbol to quote"
+					type="search"
+					value
+				/>
+			</div>
+			<div id="list-container" class="overflow-scroll position-absolute w-100 hide" style="height: 15rem">
+				<div
+					class="list-group-flush position-relative"
+					id="match-list"
+				></div>
+			</div>
+		</div>
+	</div>
+	<button class="btn btn-primary mt-3" type="submit">Quote</button>
+</form>
 
-       
-        <button class="btn btn-primary" type="submit">Quote</button>
-    </form>
-    
-    <script>
-       
-       function showResult(val){
-        let res = document.getElementById('result');
-        res.innerHTML = ''
-        if(val == '') return;
+<script type="text/javascript">
+	let search = document.getElementById('search');
+	let matchList = document.getElementById('match-list');
+	let listContainer = document.getElementById('list-container');
+	let symbolSelection = null;
 
-        let list = '';
-        fetch('/search?q=' + val).then(
-            response => response.json()
-        ).then(data=>{
-            data.forEach(element => {
-                const companyInfo = {s: element.s, n: element.n, i: element.i}
-                list += `<li onclick="setValue(element)"> ${element['s']} <span class="fs-6">${element['n']}</span></li>`
-                // res.innerHTML = element.s
-                // console.log(element.s)
-            });
-            res.innerHTML = list;
-            return true
-        }).catch(err=>{console.warn('Something went wrong', err); return false})
+	// search for company symbol name and filtered
+	const searchSymbol = async (searchText) => {
+		const symbols = JSON.parse('{{data.result | tojson}}');
+		listContainer.classList.remove('hide')
+		listContainer.classList.add('show')
+        matchList.innerHTML = '';
 
-       }
+		// Get matches to current  text input
+		let matches = symbols.filter((symbol) => {
+			const regex = new RegExp(`^${searchText}`, 'gi');
+			return symbol.s.match(regex) || symbol.n.match(regex);
+		});
 
-       function setValue(e){
-        console.log('element click', e)
-       }
-       
-    </script>
+		if (searchText.length == 0) {
+			matches = [];
+		}
+		outputHtml(matches);
+	};
+	const outputHtml = (matches) => {
+		if (matches.length > 0) {
+			const html = matches
+				.map(
+					(match) => `
+            <div class="list-item list-group-item text-start lh-1" data-symbol="${match.s}">
+                <h6 class="mb-0  text-primary">${match.s}</h6>
+                <small class="text-secundary">${match.n}</small>
+            </div>
+                `,
+				)
+				.join('');
+			matchList.innerHTML = html;
+			symbolSelection = document.querySelectorAll('.list-item');
+		}
+
+        // Set the value for the input field
+		symbolSelection.forEach((symbol) => {
+			symbol.addEventListener('click', setSearchValue)
+		});
+	};
+
+	function setSearchValue() {
+        const symbolName = this.dataset.symbol
+        search.value = symbolName;
+        matchList.innerHTML = '';
+        listContainer.classList.add('hide')
+        listContainer.classList.remove('show')
+	};
+
+	search.addEventListener('input', () => searchSymbol(search.value));
+
+</script>
 {% endblock %}
