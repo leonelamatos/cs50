@@ -81,11 +81,8 @@ def create_table(db):
         )'''
     )
 
-
-def condition(dic, q):
-    return dic['s'] == q
-
-
+def int_format(value):
+    return int(value)
 
 
 
