@@ -6,7 +6,7 @@ from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from helpers import apology, login_required, lookup, usd, create_table
+from helpers import apology, login_required, lookup, usd, create_table, int_format
 
 # Configure application
 app = Flask(__name__)
@@ -44,28 +44,48 @@ def after_request(response):
 def index():
     """Show portfolio of stocks"""
 
-    # symbols = search_symbol('peps')
-    return render_template('home.html', usd=usd)
+    user_shares = db.execute('SELECT cash,symbol,name,price, share_qty FROM users JOIN (SELECT * FROM shares WHERE shares.owner_id = ?) ', session['user_id'])
+
+    total = 0
+    user_cash = 0
+    for price in user_shares:
+        total = total + price['price'] * price['share_qty']
+        user_cash = price['cash']
+
+    # print(user_shares)
+    return render_template('home.html', usd=usd, user_shares=user_shares, int_format=int_format, total=total, user_cash=user_cash)
 
 
 @app.route("/buy", methods=["GET", "POST"])
 @login_required
 def buy():
-    print(lookup('amzn'))
     """Buy shares of stock"""
-    #     user_info = db.execute('SELECT * FROM users WHERE id = ?', session['user_id'])
-    # user_id = user_info[0]['id']
-    # user = user_info[0]['username']
+    user_info = db.execute('SELECT * FROM users WHERE id = ?', session['user_id'])
+    user_id = user_info[0]['id']
+    user = user_info[0]['username']
+
+
+    with open('symbols.json', 'r') as f:
+        data = json.load(f)
     
-    # cash = user_info[0]['cash']
-    # company_name = quote['name']
-    # company_price = quote['price']
-    # cash_left = cash - company_price
-    # buy_on = datetime.datetime.now()
+    if request.method == 'POST':
+        symbol = request.form['symbol']
+        qty = int(request.form['qty'])
 
+        symbol_info = lookup(symbol)
 
-    #  db.execute('INSERT INTO shares  (symbol,name,price,share_qty,purchased_on, owner_id) VALUES (?,?,?,?,?,?)',symbol, company_name, company_price, 1, buy_on, user_id)
-    return apology("TODO")
+        cash = user_info[0]['cash']
+        company_name = symbol_info['name']
+        company_price = symbol_info['price']
+        total_amount = company_price * qty
+        cash_left = cash - total_amount
+        buy_on = datetime.datetime.now()
+
+        print(cash, company_name,company_price,buy_on,total_amount,cash_left, qty)
+
+        db.execute('INSERT INTO shares  (symbol,name,price,share_qty,purchased_on, owner_id) VALUES (?,?,?,?,?,?)',symbol, company_name, company_price, qty, buy_on, user_id)
+
+    return render_template('buy.html', data=data)
 
 
 @app.route("/history")
@@ -126,21 +146,15 @@ def logout():
 @login_required
 def quote():
     """Get stock quote."""
-    quote={}
+    quote = {}
     with open('symbols.json', 'r') as f:
         data = json.load(f)
 
     if request.method == 'POST':
         symbol = request.form['quote']
         quote = lookup(symbol)
-        
-       
-        # return redirect('quote.html', requested_quote=quote, data=data, usd=usd)
 
-
-    # print(user_id, user, cash)
     return render_template('quote.html', data=data, requested_quote=quote, usd=usd)
-    f.close()
 
 
 
