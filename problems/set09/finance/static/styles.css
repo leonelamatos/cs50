@@ -68,3 +68,7 @@ small.text-secundary{
 .show {
     display: block;
 }
+
+.w-30 {
+    width: 30% !important;
+}
