@@ -25,6 +25,7 @@ Session(app)
 # Configure CS50 Library to use SQLite database
 db = SQL("sqlite:///finance.db")
 
+
 # Make sure API key is set
 if not os.environ.get("API_KEY"):
     raise RuntimeError("API_KEY not set")
@@ -44,16 +45,25 @@ def after_request(response):
 def index():
     """Show portfolio of stocks"""
 
-    user_shares = db.execute('SELECT cash,symbol,name,price, share_qty FROM users JOIN (SELECT * FROM shares WHERE shares.owner_id = ?) ', session['user_id'])
+    # create_table(db)
 
-    total = 0
-    user_cash = 0
-    for price in user_shares:
-        total = total + price['price'] * price['share_qty']
-        user_cash = price['cash']
+    # db.execute(' UPDATE users SET cash = ? WHERE users.id = ?;', 8547.73, 1)
 
-    # print(user_shares)
-    return render_template('home.html', usd=usd, user_shares=user_shares, int_format=int_format, total=total, user_cash=user_cash)
+    user_shares = db.execute('SELECT cash, symbol,name,price, share_qty FROM users JOIN (SELECT * FROM shares WHERE owner_id = ?) ORDER BY purchased_on DESC;', session['user_id'])
+
+    user_cash = db.execute('SELECT cash, SUM(price * share_qty) AS sum FROM users LEFT JOIN shares ON shares.owner_id = users.id WHERE users.id = ?;', session['user_id'])
+
+
+    
+    print(user_cash)
+    cash = user_cash[0]['cash']
+    total_share = user_cash[0]['sum']
+
+    
+    # for price in user_shares:
+    #     total = total + price['price'] * price['share_qty']
+    
+    return render_template('home.html', usd=usd, user_shares=user_shares, int_format=int_format, user_cash=cash, total_share=total_share)
 
 
 @app.route("/buy", methods=["GET", "POST"])
@@ -71,20 +81,31 @@ def buy():
     if request.method == 'POST':
         symbol = request.form['symbol']
         qty = int(request.form['qty'])
-
         symbol_info = lookup(symbol)
-
-        cash = user_info[0]['cash']
-        company_name = symbol_info['name']
         company_price = symbol_info['price']
         total_amount = company_price * qty
+        cash = user_info[0]['cash']
+        company_name = symbol_info['name']
         cash_left = cash - total_amount
         buy_on = datetime.datetime.now()
 
-        print(cash, company_name,company_price,buy_on,total_amount,cash_left, qty)
+        symbol_exists = db.execute('SELECT symbol FROM shares WHERE symbol = ? AND owner_id = ?', symbol, user_id)
 
-        db.execute('INSERT INTO shares  (symbol,name,price,share_qty,purchased_on, owner_id) VALUES (?,?,?,?,?,?)',symbol, company_name, company_price, qty, buy_on, user_id)
 
+        if symbol == symbol_exists[0]['symbol']:
+            # new_qty = symbol_exists[0]['share_qty'] + qty
+            db.execute('UPDATE shares SET share_qty = share_qty + ?, price = ? WHERE symbol = ?;', qty, company_price, symbol)
+
+            db.execute('UPDATE users SET cash = cash - ? WHERE id = ?;', total_amount, user_id)
+
+        else:
+
+            db.execute('INSERT INTO shares (symbol,name,price,share_qty,purchased_on, owner_id) VALUES (?,?,?,?,?,?);', symbol, company_name, company_price, qty, buy_on, user_id)
+            db.execute(' UPDATE users SET cash = cash - ? WHERE users.id = ?;', total_amount, user_id)
+
+        return redirect('/')
+
+            
     return render_template('buy.html', data=data)
 
 
