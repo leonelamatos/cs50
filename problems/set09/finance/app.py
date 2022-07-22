@@ -1,4 +1,4 @@
-import os
+import os, datetime
 
 from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, session, jsonify, json
@@ -6,7 +6,7 @@ from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from helpers import apology, login_required, lookup, usd, create_table, condition
+from helpers import apology, login_required, lookup, usd, create_table
 
 # Configure application
 app = Flask(__name__)
@@ -53,6 +53,18 @@ def index():
 def buy():
     print(lookup('amzn'))
     """Buy shares of stock"""
+    #     user_info = db.execute('SELECT * FROM users WHERE id = ?', session['user_id'])
+    # user_id = user_info[0]['id']
+    # user = user_info[0]['username']
+    
+    # cash = user_info[0]['cash']
+    # company_name = quote['name']
+    # company_price = quote['price']
+    # cash_left = cash - company_price
+    # buy_on = datetime.datetime.now()
+
+
+    #  db.execute('INSERT INTO shares  (symbol,name,price,share_qty,purchased_on, owner_id) VALUES (?,?,?,?,?,?)',symbol, company_name, company_price, 1, buy_on, user_id)
     return apology("TODO")
 
 
@@ -114,10 +126,22 @@ def logout():
 @login_required
 def quote():
     """Get stock quote."""
-    if request.method == 'GET':
-        with open('symbols.json', 'r') as f:
-            data = json.load(f)
-    return render_template('quote.html', data=data )
+    quote={}
+    with open('symbols.json', 'r') as f:
+        data = json.load(f)
+
+    if request.method == 'POST':
+        symbol = request.form['quote']
+        quote = lookup(symbol)
+        
+       
+        # return redirect('quote.html', requested_quote=quote, data=data, usd=usd)
+
+
+    # print(user_id, user, cash)
+    return render_template('quote.html', data=data, requested_quote=quote, usd=usd)
+    f.close()
+
 
 
 @app.route("/register", methods=["GET", "POST"])
