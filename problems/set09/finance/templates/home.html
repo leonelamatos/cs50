@@ -10,16 +10,19 @@
       <th class="text-end">TOTAL</th>
     </tr>
   </thead>
-  <tbody>{% for share in user_shares %}
+  
+  <tbody>
+    {% for share in user_shares %}
     <tr>
       <td class="text-start">{{share.symbol}}</td>
-      <td class="text-start">{{share.name}}</td>
+      <td class="text-start">{{share.name }}</td>
       <td class="text-end">{{int_format(share.share_qty)}}</td>
       <td class="text-end">{{usd(share.price)}}</td>
       <td class="text-end">{{usd(share.price * share.share_qty)}}</td>
     </tr>
     
-    {% endfor %}</tbody>
+    {% endfor %}
+  </tbody>
   <tfoot>
     <tr>
       <td class="border-0 fw-bold text-end" colspan="4">Cash</td>
@@ -27,7 +30,7 @@
     </tr>
     <tr>
       <td class="border-0 fw-bold text-end" colspan="4">TOTAL</td>
-      <td  class="border-0 text-end">{{usd(total_share)}}</td>
+      <td  class="border-0 text-end">{{ usd(total_share)}}</td>
     </tr>
   </tfoot>
 </table>

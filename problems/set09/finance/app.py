@@ -47,7 +47,7 @@ def index():
 
     # create_table(db)
 
-    # db.execute(' UPDATE users SET cash = ? WHERE users.id = ?;', 8547.73, 1)
+    # db.execute(' UPDATE users SET cash = ? WHERE users.id = ?;', 10000, 1)
 
     user_shares = db.execute('SELECT cash, symbol,name,price, share_qty FROM users JOIN (SELECT * FROM shares WHERE owner_id = ?) ORDER BY purchased_on DESC;', session['user_id'])
 
@@ -55,9 +55,9 @@ def index():
 
 
     
-    print(user_cash)
+    # print(user_cash)
     cash = user_cash[0]['cash']
-    total_share = user_cash[0]['sum']
+    total_share = user_cash[0]['sum'] or 0
 
     
     # for price in user_shares:
@@ -73,7 +73,6 @@ def buy():
     user_info = db.execute('SELECT * FROM users WHERE id = ?', session['user_id'])
     user_id = user_info[0]['id']
     user = user_info[0]['username']
-
 
     with open('symbols.json', 'r') as f:
         data = json.load(f)
@@ -91,17 +90,18 @@ def buy():
 
         symbol_exists = db.execute('SELECT symbol FROM shares WHERE symbol = ? AND owner_id = ?', symbol, user_id)
 
+        if cash < company_price:
+            return apology('NO ENOUGH CASH')
 
-        if symbol == symbol_exists[0]['symbol']:
-            # new_qty = symbol_exists[0]['share_qty'] + qty
+        if len(symbol_exists) > 0:
             db.execute('UPDATE shares SET share_qty = share_qty + ?, price = ? WHERE symbol = ?;', qty, company_price, symbol)
-
             db.execute('UPDATE users SET cash = cash - ? WHERE id = ?;', total_amount, user_id)
-
+            # return
         else:
 
             db.execute('INSERT INTO shares (symbol,name,price,share_qty,purchased_on, owner_id) VALUES (?,?,?,?,?,?);', symbol, company_name, company_price, qty, buy_on, user_id)
-            db.execute(' UPDATE users SET cash = cash - ? WHERE users.id = ?;', total_amount, user_id)
+
+            db.execute('UPDATE users SET cash = cash - ? WHERE id = ?;', total_amount, user_id)
 
         return redirect('/')
 
