@@ -31,6 +31,7 @@ if not os.environ.get("API_KEY"):
     raise RuntimeError("API_KEY not set")
 
 
+
 @app.after_request
 def after_request(response):
     """Ensure responses aren't cached"""
@@ -191,7 +192,7 @@ def register():
 
         db.execute('INSERT INTO users (username, hash) VALUES (?,?)', username, hashed_password)
         
-        print(username, password, hashed_password)
+        # print(username, password, hashed_password)
         return redirect('/')
 
     return render_template('register.html')
@@ -203,6 +204,32 @@ def register():
 @login_required
 def sell():
     """Sell shares of stock"""
-    return apology("TODO")
+    shares = db.execute('SELECT * FROM shares WHERE owner_id = ?', session['user_id'])
+
+    if request.method == 'POST':
+        symbol = request.form.get('symbol')
+        shares_number =  request.form.get('shares')
+        sold_on = datetime.datetime.now()
+
+        sold_shares = lookup(symbol)
+
+        if not symbol:
+            return apology("You did not select a symbol")
+
+        for share in shares:
+            if int(shares_number) > share['share_qty'] and share['symbol'] == symbol:
+                return apology("Not that many shares")
+            if share['share_qty'] == 0:
+                db.execute('DELETE FROM shares WHERE share_qty = 0 AND owner_id = ?;', session['user_id'])
+
+        db.execute('UPDATE shares SET share_qty = share_qty - ? sold_on = ?  WHERE symbol = ?', shares_number, sold_on, symbol)
+
+        db.execute('UPDATE users SET cash = cash + ? WHERE id = ?', sold_shares['price'], session['user_id'])
+
+        return redirect('/')
+            
+
+    return render_template('sell.html', shares=shares)
+    # return apology("TODO")
 
 
