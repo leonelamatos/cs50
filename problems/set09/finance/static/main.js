@@ -45,9 +45,10 @@ const outputHtml = (matches) => {
         const html = matches
             .map(
                 (match) => `
-        <div class="list-item list-group-item text-start lh-1" data-symbol="${match.s}">
-            <h6 class="mb-0  text-primary">${match.s}</h6>
-            <small class="text-secundary">${match.n}</small>
+        <div class="list-item list-group-item text-start lh-1 hstack gap-3 py-3" data-symbol="${match.s}" >
+            <h6 class="mb-0  text-primary" style="width: 50px">${match.s}</h6>
+            <div class="vr pl-3"></div>
+            <small class="text-secondary fw-bold fs-6">${match.n}</small>
         </div>
             `,
             )
