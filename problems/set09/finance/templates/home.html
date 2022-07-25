@@ -18,7 +18,7 @@
       <td class="text-start">{{share.name }}</td>
       <td class="text-end">{{int_format(share.share_qty)}}</td>
       <td class="text-end">{{usd(share.price)}}</td>
-      <td class="text-end">{{usd(share.price * share.share_qty)}}</td>
+      <td class="text-end">{{usd(total_share)}}</td>
     </tr>
     
     {% endfor %}

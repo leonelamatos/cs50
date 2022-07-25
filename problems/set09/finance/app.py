@@ -50,20 +50,13 @@ def index():
     # create_history_table(db)
     # db.execute(' UPDATE users SET cash = ? WHERE users.id = ?;', 10000, 1)
 
-    user_shares = db.execute('SELECT cash, symbol,name,price, share_qty FROM users JOIN (SELECT * FROM shares WHERE owner_id = ?) ORDER BY purchased_on DESC;', session['user_id'])
-
-    user_cash = db.execute('SELECT cash, SUM(price * share_qty) AS sum FROM users LEFT JOIN shares ON shares.owner_id = users.id WHERE users.id = ?;', session['user_id'])
+    user_shares = db.execute('SELECT cash, SUM(price * share_qty) AS sum, symbol,name,price, share_qty FROM users JOIN shares ON owner_id = users.id WHERE users.id = ? ORDER BY purchased_on DESC;', session['user_id'])
 
 
-    
-    # print(user_cash)
-    cash = user_cash[0]['cash']
-    total_share = user_cash[0]['sum'] or 0
+    cash = user_shares[0]['cash']
+    total_share = user_shares[0]['sum'] or 0
 
-    
-    # for price in user_shares:
-    #     total = total + price['price'] * price['share_qty']
-    
+
     return render_template('home.html', usd=usd, user_shares=user_shares, int_format=int_format, user_cash=cash, total_share=total_share)
 
 
