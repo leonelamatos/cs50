@@ -6,7 +6,7 @@ from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from helpers import apology, login_required, lookup, usd, create_table, int_format
+from helpers import apology, login_required, lookup, usd, create_table, int_format, create_history_table
 
 # Configure application
 app = Flask(__name__)
@@ -47,7 +47,7 @@ def index():
     """Show portfolio of stocks"""
 
     # create_table(db)
-
+    # create_history_table(db)
     # db.execute(' UPDATE users SET cash = ? WHERE users.id = ?;', 10000, 1)
 
     user_shares = db.execute('SELECT cash, symbol,name,price, share_qty FROM users JOIN (SELECT * FROM shares WHERE owner_id = ?) ORDER BY purchased_on DESC;', session['user_id'])
@@ -104,6 +104,8 @@ def buy():
 
             db.execute('UPDATE users SET cash = cash - ? WHERE id = ?;', total_amount, user_id)
 
+        db.execute('INSERT INTO history (symbol, price,share_qty, transaction_date, type, ownerId) VALUES (?,?,?,?,?,?);', symbol, company_price,qty,buy_on,'Purchased', user_id)
+
         return redirect('/')
 
             
@@ -114,8 +116,9 @@ def buy():
 @login_required
 def history():
     """Show history of transactions"""
-    return apology("TODO")
 
+    data = db.execute('SELECT * FROM history WHERE ownerId = ? ORDER BY transaction_date DESC;', session['user_id'])
+    return render_template('history.html', data=data, usd=usd, int_format=int_format)
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -179,7 +182,6 @@ def quote():
     return render_template('quote.html', data=data, requested_quote=quote, usd=usd)
 
 
-
 @app.route("/register", methods=["GET", "POST"])
 def register():
 
@@ -196,8 +198,6 @@ def register():
         return redirect('/')
 
     return render_template('register.html')
-
-
 
 
 @app.route("/sell", methods=["GET", "POST"])
@@ -222,14 +222,15 @@ def sell():
             if share['share_qty'] == 0:
                 db.execute('DELETE FROM shares WHERE share_qty = 0 AND owner_id = ?;', session['user_id'])
 
-        db.execute('UPDATE shares SET share_qty = share_qty - ? sold_on = ?  WHERE symbol = ?', shares_number, sold_on, symbol)
+        db.execute('UPDATE shares SET share_qty = share_qty - ?, sold_on = ?  WHERE symbol = ?', shares_number, sold_on, symbol)
 
         db.execute('UPDATE users SET cash = cash + ? WHERE id = ?', sold_shares['price'], session['user_id'])
+
+        db.execute('INSERT INTO history (symbol, price,share_qty, transaction_date, type, ownerId) VALUES (?,?,?,?,?,?);', symbol, sold_shares['price'],shares_number,sold_on,'Sold', session['user_id'])
 
         return redirect('/')
             
 
     return render_template('sell.html', shares=shares)
-    # return apology("TODO")
 
 

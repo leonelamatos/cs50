@@ -1,0 +1,29 @@
+{% extends "layout.html" %} {% block title %} Home {% endblock %} {% block main
+%}
+<table class="table table-striped container">
+  <thead>
+    <tr>
+      <th class="text-start">Symbol</th>
+      <th class="text-end">Shares</th>
+      <th class="text-end">Price</th>
+      <th class="text-end">Type</th>
+      <th class="text-end">Transacted</th>
+    </tr>
+  </thead>
+  
+  <tbody>
+    {% for history in data %}
+    <tr>
+      <td class="text-start">{{history.symbol}}</td>
+      <td class="text-end">{{int_format(history.share_qty)}}</td>
+      <td class="text-end">{{usd(history.price) or 0}}</td>
+      <td class="text-end">{{history.type}}</td>
+      <td class="text-end">{{history.transaction_date}}</td>
+    </tr>
+    
+    {% endfor %}
+  </tbody>
+  
+</table>
+
+{% endblock %}

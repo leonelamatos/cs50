@@ -82,6 +82,23 @@ def create_table(db):
         )'''
     )
 
+def create_history_table(db):
+    db.execute('''
+        CREATE TABLE IF NOT EXISTS history (
+            id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+            symbol TEXT NOT NULL,
+            price NUMERIC NOT NULL,
+            share_qty REAL NOT NULL,
+            transaction_date TEXT,
+            type TEXT,
+            ownerId INTEGER,
+            FOREIGN KEY (ownerId)
+            REFERENCES users (id)
+                ON UPDATE CASCADE
+                ON DELETE CASCADE
+        )'''
+    )
+
 def int_format(value):
     return int(value)
 
