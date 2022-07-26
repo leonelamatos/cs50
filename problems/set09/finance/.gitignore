@@ -3,3 +3,8 @@ flask_session/
 __pycache__/
 *.py[cod]
 *$py.class
+bin/
+include/
+lib/
+lib64/
+share/
