@@ -54,6 +54,10 @@ const outputHtml = (matches) => {
             )
             .join('');
         matchList.innerHTML = html;
+    } else {
+        
+        listContainer.classList.remove('show');
+        listContainer.classList.add('hide');
     }
 };
 
