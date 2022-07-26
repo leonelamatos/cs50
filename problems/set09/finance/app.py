@@ -50,37 +50,48 @@ def index():
     # create_history_table(db)
     # db.execute(' UPDATE users SET cash = ? WHERE users.id = ?;', 10000, 1)
 
-    user_shares = db.execute('SELECT cash, SUM(price * share_qty) AS sum, symbol,name,price, share_qty FROM users JOIN shares ON owner_id = users.id WHERE users.id = ? ORDER BY purchased_on DESC;', session['user_id'])
+    user_shares = db.execute('SELECT cash, SUM(price * share_qty) AS sum, symbol,name,price, share_qty FROM users INNER JOIN shares ON shares.owner_id = users.id WHERE users.id = ? GROUP BY symbol ORDER BY purchased_on DESC;', session['user_id'])
 
 
     cash = user_shares[0]['cash']
     total_share = user_shares[0]['sum'] or 0
 
+    total_shares_amount = 0
+    for share_amount in user_shares:
+        total_shares_amount = total_shares_amount + share_amount['sum']
 
-    return render_template('home.html', usd=usd, user_shares=user_shares, int_format=int_format, user_cash=cash, total_share=total_share)
+
+    print(total_shares_amount)
+    return render_template('index.html', usd=usd, user_shares=user_shares, int_format=int_format, user_cash=cash, total_share_amount=total_shares_amount, total_share=total_share)
 
 
 @app.route("/buy", methods=["GET", "POST"])
 @login_required
 def buy():
     """Buy shares of stock"""
+
+    with open('symbols.json', 'r') as f:
+        data = json.load(f)
+
     user_info = db.execute('SELECT * FROM users WHERE id = ?', session['user_id'])
     user_id = user_info[0]['id']
     user = user_info[0]['username']
 
-    with open('symbols.json', 'r') as f:
-        data = json.load(f)
-    
     if request.method == 'POST':
-        symbol = request.form['symbol']
+        symbol = request.form.get('symbol')
         qty = int(request.form['qty'])
         symbol_info = lookup(symbol)
+
+        if symbol != symbol_info['symbol'] or not symbol:
+            return apology('This company symbol doesn\'t exsist')
+
         company_price = symbol_info['price']
         total_amount = company_price * qty
         cash = user_info[0]['cash']
         company_name = symbol_info['name']
         cash_left = cash - total_amount
         buy_on = datetime.datetime.now()
+
 
         symbol_exists = db.execute('SELECT symbol FROM shares WHERE symbol = ? AND owner_id = ?', symbol, user_id)
 
@@ -182,6 +193,19 @@ def register():
         """Register user"""
         username = request.form.get('username')
         password = request.form.get('password')
+        confirmation = request.form.get('confirmation')
+
+        username_check = db.execute('SELECT username FROM users')
+       
+        if not username or not password:
+            return apology('No username provided')
+      
+        if password != confirmation:
+            return apology('Password and password confirmation doesn\'t match')
+        
+        for user in username_check:
+            if user['username'] == username:
+                return apology('This username is already used.')
 
         hashed_password = generate_password_hash(password, method='sha256',salt_length=16)
 
