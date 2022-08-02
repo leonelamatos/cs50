@@ -1,4 +1,5 @@
-import os, datetime
+import os
+import datetime
 
 from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, session, jsonify, json
@@ -6,7 +7,7 @@ from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from helpers import apology, login_required, lookup, usd, create_table, int_format, create_history_table
+from helpers import apology, login_required, lookup, usd, create_table, int_format
 
 # Configure application
 app = Flask(__name__)
@@ -31,7 +32,6 @@ if not os.environ.get("API_KEY"):
     raise RuntimeError("API_KEY not set")
 
 
-
 @app.after_request
 def after_request(response):
     """Ensure responses aren't cached"""
@@ -44,75 +44,88 @@ def after_request(response):
 @app.route("/")
 @login_required
 def index():
+    # db.execute(' UPDATE users SET cash = ? WHERE users.id = ?;', 10000, session['user_id'])
+
     """Show portfolio of stocks"""
+    # Checkif the table exists
+    table_exists = db.execute('SELECT name FROM sqlite_master WHERE name = "stockTransactions" AND type="table";')
 
-    # create_table(db)
-    # create_history_table(db)
-    # db.execute(' UPDATE users SET cash = ? WHERE users.id = ?;', 10000, 1)
+    # Create the tables if dont exist 
+    if not table_exists:
+        create_table(db)
 
-    user_shares = db.execute('SELECT cash, SUM(price * share_qty) AS sum, symbol,name,price, share_qty FROM users INNER JOIN shares ON shares.owner_id = users.id WHERE users.id = ? GROUP BY symbol ORDER BY purchased_on DESC;', session['user_id'])
+    # Select the users stocks information
+    stocks = db.execute(
+        'SELECT *, SUM(stockPrice * shareQty) AS stockValue FROM stockTransactions WHERE ownerId = ? GROUP BY stockSymbol HAVING shareQty > 0', session['user_id'])
 
+    # Store the sum of all shares value.
+    sharesValue = sum([t['stockValue']for t in stocks])
 
-    cash = user_shares[0]['cash']
-    total_share = user_shares[0]['sum'] or 0
+    # Store the user's cash
+    cash = db.execute('SELECT cash FROM users WHERE users.id == ?',
+                        session['user_id'])[0]['cash']
 
-    total_shares_amount = 0
-    for share_amount in user_shares:
-        total_shares_amount = total_shares_amount + share_amount['sum']
-
-
-    print(total_shares_amount)
-    return render_template('index.html', usd=usd, user_shares=user_shares, int_format=int_format, user_cash=cash, total_share_amount=total_shares_amount, total_share=total_share)
+    return render_template('index.html', usd=usd, stocks=stocks, int_format=int_format, user_cash=cash, stock_value=sharesValue)
 
 
 @app.route("/buy", methods=["GET", "POST"])
 @login_required
 def buy():
     """Buy shares of stock"""
-
+    user_id = session['user_id']
+    # Set the data to implement the autocomplete feature in javascript
     with open('symbols.json', 'r') as f:
         data = json.load(f)
 
-    user_info = db.execute('SELECT * FROM users WHERE id = ?', session['user_id'])
-    user_id = user_info[0]['id']
-    user = user_info[0]['username']
+    # Store the user information
+    user_info = db.execute('SELECT * FROM users WHERE id = ?', user_id)[0]
+    # Set the username
+    user = user_info['username']
 
     if request.method == 'POST':
+
+        if lookup(request.form.get('symbol')) == None:
+            return apology('You have entered an invalid symbol', 400)
+
+        if not request.form.get('shares').isnumeric():
+            return apology('No a valid quatity')
+
+        transaction_type = 'Purchased'
+        transaction_date = datetime.datetime.now()
+
         symbol = request.form.get('symbol')
-        qty = int(request.form['qty'])
+        qty = int(request.form.get('shares'))
         symbol_info = lookup(symbol)
 
-        if symbol != symbol_info['symbol'] or not symbol:
-            return apology('This company symbol doesn\'t exsist')
+        print(symbol_info, qty)
 
         company_price = symbol_info['price']
-        total_amount = company_price * qty
-        cash = user_info[0]['cash']
+        stocks_value = company_price * qty
+        cash = user_info['cash']
         company_name = symbol_info['name']
-        cash_left = cash - total_amount
-        buy_on = datetime.datetime.now()
+        cash_left = cash - stocks_value
 
 
-        symbol_exists = db.execute('SELECT symbol FROM shares WHERE symbol = ? AND owner_id = ?', symbol, user_id)
+        symbol_exists = db.execute(
+            'SELECT stockSymbol FROM stockTransactions WHERE stockSymbol = ? AND ownerId = ?', symbol, user_id)
 
-        if cash < company_price:
+        if cash < company_price * qty:
             return apology('NO ENOUGH CASH')
 
         if len(symbol_exists) > 0:
-            db.execute('UPDATE shares SET share_qty = share_qty + ?, price = ? WHERE symbol = ?;', qty, company_price, symbol)
-            db.execute('UPDATE users SET cash = cash - ? WHERE id = ?;', total_amount, user_id)
-            # return
+            db.execute('UPDATE stockTransactions SET shareQty = shareQty + ?, stockPrice = ?  WHERE stockSymbol = ? AND ownerId = ?;',
+                        qty, company_price, symbol, user_id)
         else:
+            db.execute('INSERT INTO stockTransactions (stockSymbol, stockName, stockPrice, shareQty, ownerId) VALUES (?,?,?,?,?);',
+                        symbol, company_name, company_price, qty, user_id)
 
-            db.execute('INSERT INTO shares (symbol,name,price,share_qty,purchased_on, owner_id) VALUES (?,?,?,?,?,?);', symbol, company_name, company_price, qty, buy_on, user_id)
+        db.execute('INSERT INTO transactionHistories (stockSymbol, stockPrice, shareQtySold, transactionDate, transactionType, ownerId) VALUES (?,?,?,?,?,?);', symbol, symbol_info['price'], qty, transaction_date, transaction_type, user_id)
 
-            db.execute('UPDATE users SET cash = cash - ? WHERE id = ?;', total_amount, user_id)
-
-        db.execute('INSERT INTO history (symbol, price,share_qty, transaction_date, type, ownerId) VALUES (?,?,?,?,?,?);', symbol, company_price,qty,buy_on,'Purchased', user_id)
+        db.execute('UPDATE users SET cash = cash - ? WHERE id = ?;',
+                    stocks_value, user_id)
 
         return redirect('/')
 
-            
     return render_template('buy.html', data=data)
 
 
@@ -121,8 +134,12 @@ def buy():
 def history():
     """Show history of transactions"""
 
-    data = db.execute('SELECT * FROM history WHERE ownerId = ? ORDER BY transaction_date DESC;', session['user_id'])
+    data = db.execute(
+        'SELECT * FROM transactionHistories WHERE ownerId = ? ORDER BY transactionDate DESC;', session['user_id'])
+
+    print(data)
     return render_template('history.html', data=data, usd=usd, int_format=int_format)
+
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -143,7 +160,8 @@ def login():
             return apology("must provide password", 403)
 
         # Query database for username
-        rows = db.execute("SELECT * FROM users WHERE username = ?", request.form.get("username"))
+        rows = db.execute("SELECT * FROM users WHERE username = ?",
+                            request.form.get("username"))
 
         # Ensure username exists and password is correct
         if len(rows) != 1 or not check_password_hash(rows[0]["hash"], request.form.get("password")):
@@ -180,8 +198,13 @@ def quote():
         data = json.load(f)
 
     if request.method == 'POST':
-        symbol = request.form['quote']
-        quote = lookup(symbol)
+        if not request.form.get('symbol'):
+            return apology('Symbol can\'t be empty', 400)
+        elif lookup(request.form.get('symbol')) == None:
+            return apology('You have entered an invalid symbol', 400)
+
+        symbol = request.form['symbol']
+        quote = lookup(request.form.get('symbol'))
 
     return render_template('quote.html', data=data, requested_quote=quote, usd=usd)
 
@@ -196,21 +219,23 @@ def register():
         confirmation = request.form.get('confirmation')
 
         username_check = db.execute('SELECT username FROM users')
-       
+
         if not username or not password:
             return apology('No username provided')
-      
+
         if password != confirmation:
             return apology('Password and password confirmation doesn\'t match')
-        
+
         for user in username_check:
             if user['username'] == username:
                 return apology('This username is already used.')
 
-        hashed_password = generate_password_hash(password, method='sha256',salt_length=16)
+        hashed_password = generate_password_hash(
+            password, method='sha256', salt_length=16)
 
-        db.execute('INSERT INTO users (username, hash) VALUES (?,?)', username, hashed_password)
-        
+        db.execute('INSERT INTO users (username, hash) VALUES (?,?)',
+                    username, hashed_password)
+
         # print(username, password, hashed_password)
         return redirect('/')
 
@@ -221,33 +246,40 @@ def register():
 @login_required
 def sell():
     """Sell shares of stock"""
-    shares = db.execute('SELECT * FROM shares WHERE owner_id = ?', session['user_id'])
+    shares = db.execute(
+        'SELECT * FROM stockTransactions WHERE ownerId = ? AND shareQty > 0', session['user_id'])
 
     if request.method == 'POST':
         symbol = request.form.get('symbol')
-        shares_number =  request.form.get('shares')
-        sold_on = datetime.datetime.now()
+        shares_number = int(request.form.get('shares'))
+        transaction_date = datetime.datetime.now()
+        transaction_type = 'Sold'
 
         sold_shares = lookup(symbol)
 
+        isinshare = [d for d in shares if d['stockSymbol'] == symbol]
+
+        current_share_price = isinshare[0]['stockPrice']
+        sell_price = sold_shares['price'] * shares_number
+      
+
+        remaing_shares = 0
         if not symbol:
             return apology("You did not select a symbol")
 
         for share in shares:
-            if int(shares_number) > share['share_qty'] and share['symbol'] == symbol:
+            if int(shares_number) > share['shareQty'] and share['stockSymbol'] == symbol:
                 return apology("Not that many shares")
-            if share['share_qty'] == 0:
-                db.execute('DELETE FROM shares WHERE share_qty = 0 AND owner_id = ?;', session['user_id'])
 
-        db.execute('UPDATE shares SET share_qty = share_qty - ?, sold_on = ?  WHERE symbol = ?', shares_number, sold_on, symbol)
 
-        db.execute('UPDATE users SET cash = cash + ? WHERE id = ?', sold_shares['price'], session['user_id'])
+        db.execute('INSERT INTO transactionHistories (stockSymbol, stockPrice, shareQtySold, transactionDate, transactionType, ownerId) VALUES (?,?,?,?,?,?);', symbol, sold_shares['price'], shares_number, transaction_date, transaction_type, session['user_id'])
 
-        db.execute('INSERT INTO history (symbol, price,share_qty, transaction_date, type, ownerId) VALUES (?,?,?,?,?,?);', symbol, sold_shares['price'],shares_number,sold_on,'Sold', session['user_id'])
+        db.execute('UPDATE stockTransactions SET shareQty = shareQty - ? WHERE stockSymbol = ? AND ownerId = ?', 
+                    shares_number, symbol, session['user_id'])
+
+        db.execute('UPDATE users SET cash = cash + ? WHERE id = ?',
+                    sell_price, session['user_id'])
 
         return redirect('/')
-            
 
     return render_template('sell.html', shares=shares)
-
-

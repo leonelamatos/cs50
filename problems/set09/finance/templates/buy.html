@@ -35,12 +35,13 @@
 				<input
 					autofocus
 					class="form-control form-control-lg w-30 mt-3"
-					id="qty"
-					name="qty"
+					id="shares"
+					name="shares"
 					placeholder="Shares"
 					type="number"
-					value=1
 					min="1"
+					value="1"
+						
 				/>
 			</div>
 			
@@ -48,9 +49,7 @@
 	</div>
 	<button class="btn btn-primary mt-3" type="submit">Buy Share(s)</button>
 </form>
-{% if requested_quote %}
-<p class="fs-6 mt-3 px-0 w-100">A share of {{requested_quote.name}} ({{ requested_quote.symbol}}) costs {{usd(requested_quote.price)}}</p>
-{% endif%}
+
 
 <script type="text/javascript">window.data = '{{data.result|tojson}}'</script>
 <script src="/static/main.js"></script>

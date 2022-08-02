@@ -14,7 +14,8 @@
 			<select name="symbol" class="form-select form-select-lg mb-3">
 				<option value='None' disabled selected>Symbol</option>
 				{% for option in shares %}
-				<option value={{option.symbol}}>{{option.symbol}}</option>
+						<option value={{option.stockSymbol}}>{{option.stockSymbol}}</option>
+
 				{% endfor %}
 			</select>
 			<input
@@ -40,5 +41,4 @@
 	</div>
 	<button class="btn btn-primary mt-3" type="submit">Quote</button>
 </form>
-
 {% endblock %}

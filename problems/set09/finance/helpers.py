@@ -58,73 +58,40 @@ def lookup(symbol):
     except (KeyError, TypeError, ValueError):
         return None
 
+
 def usd(value):
     """Format value as USD."""
     return f"${value:,.2f}"
-    
 
 
 def create_table(db):
     db.execute('''
-        CREATE TABLE IF NOT EXISTS shares (
+        CREATE TABLE IF NOT EXISTS stockTransactions (
             id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-            symbol TEXT NOT NULL,
-            name TEXT NOT NULL,
-            price NUMERIC NOT NULL,
-            share_qty REAL NOT NULL,
-            purchased_on TEXT,
-            sold_on TEXT,
-            owner_id INTEGER,
-            FOREIGN KEY (owner_id)
-            REFERENCES users (id)
-                ON UPDATE CASCADE
-                ON DELETE CASCADE
-        )'''
-    )
-
-def create_history_table(db):
-    db.execute('''
-        CREATE TABLE IF NOT EXISTS history (
-            id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-            symbol TEXT NOT NULL,
-            price NUMERIC NOT NULL,
-            share_qty REAL NOT NULL,
-            transaction_date TEXT,
-            type TEXT,
+            stockSymbol TEXT NOT NULL,
+            stockName TEXT NOT NULL,
+            stockPrice NUMERIC NOT NULL,
+            shareQty REAL NOT NULL,
+            historyId INTEGER,
             ownerId INTEGER,
-            FOREIGN KEY (ownerId)
-            REFERENCES users (id)
-                ON UPDATE CASCADE
-                ON DELETE CASCADE
+            FOREIGN KEY (historyId) REFERENCES transactionHistories (id),
+            FOREIGN KEY (ownerId) REFERENCES users (id)
+            
         )'''
-    )
+                )
+    
+    db.execute('''
+        CREATE TABLE IF NOT EXISTS transactionHistories (
+            id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+            stockSymbol TEXT NOT NULL,
+            StockPrice NUMERIC NOT NULL,
+            shareQtySold REAL NOT NULL,
+            transactionDate TEXT,
+            transactionType TEXT,
+            ownerId INTEGER
+        )'''
+                )
+
 
 def int_format(value):
     return int(value)
-
-
-
-
-
-
-
-# def search_symbol(query):
-#     try:
-#         api_key = os.environ.get("API_ACCESS_KEY")
-#         url = f'https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords={query}&apikey={api_key}'
-#         response = requests.get(url)
-#         response.raise_for_status()
-#     except requests.RequestException:
-#         return None
-
-#     try:
-#         raw_query = response.json()
-#         query = raw_query["bestMatches"]
-#         filtered =  [c for c in query if condition(c)]
-#         return filtered
-        
-#     except  (KeyError, TypeError, ValueError):
-#         return None
-
-
-# 
