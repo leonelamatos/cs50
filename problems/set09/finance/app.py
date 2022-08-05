@@ -2,7 +2,7 @@ import os
 import datetime
 
 from cs50 import SQL
-from flask import Flask, flash, redirect, render_template, request, session, jsonify, json
+from flask import Flask, Blueprint, flash, redirect, render_template, request, session, jsonify, json
 from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -10,10 +10,15 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from helpers import apology, login_required, lookup, usd, create_table, int_format
 
 # Configure application
-app = Flask(__name__)
+app = Flask(__name__,static_url_path='/projects/finance/static')
+
+bp = Blueprint('finance', __name__,
+                        template_folder='templates')
 
 # Ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
+app.config["APPLICATION_ROOT"] = '/projects/finance'
+
 
 # Custom filter
 app.jinja_env.filters["usd"] = usd
@@ -41,7 +46,7 @@ def after_request(response):
     return response
 
 
-@app.route("/")
+@bp.route("/")
 @login_required
 def index():
     # db.execute(' UPDATE users SET cash = ? WHERE users.id = ?;', 10000, session['user_id'])
@@ -68,7 +73,7 @@ def index():
     return render_template('index.html', usd=usd, stocks=stocks, int_format=int_format, user_cash=cash, stock_value=sharesValue)
 
 
-@app.route("/buy", methods=["GET", "POST"])
+@bp.route("/buy", methods=["GET", "POST"])
 @login_required
 def buy():
     """Buy shares of stock"""
@@ -124,12 +129,12 @@ def buy():
         db.execute('UPDATE users SET cash = cash - ? WHERE id = ?;',
                     stocks_value, user_id)
 
-        return redirect('/')
+        return redirect('/projects/finance')
 
     return render_template('buy.html', data=data)
 
 
-@app.route("/history")
+@bp.route("/history")
 @login_required
 def history():
     """Show history of transactions"""
@@ -141,7 +146,7 @@ def history():
     return render_template('history.html', data=data, usd=usd, int_format=int_format)
 
 
-@app.route("/login", methods=["GET", "POST"])
+@bp.route("/login", methods=["GET", "POST"])
 def login():
     """Log user in"""
 
@@ -171,14 +176,14 @@ def login():
         session["user_id"] = rows[0]["id"]
 
         # Redirect user to home page
-        return redirect("/")
+        return redirect("/projects/finance")
 
     # User reached route via GET (as by clicking a link or via redirect)
     else:
         return render_template("login.html")
 
 
-@app.route("/logout")
+@bp.route("/logout")
 def logout():
     """Log user out"""
 
@@ -186,10 +191,10 @@ def logout():
     session.clear()
 
     # Redirect user to login form
-    return redirect("/")
+    return redirect("/projects/finance")
 
 
-@app.route("/quote", methods=["GET", "POST"])
+@bp.route("/quote", methods=["GET", "POST"])
 @login_required
 def quote():
     """Get stock quote."""
@@ -209,7 +214,7 @@ def quote():
     return render_template('quote.html', data=data, requested_quote=quote, usd=usd)
 
 
-@app.route("/register", methods=["GET", "POST"])
+@bp.route("/register", methods=["GET", "POST"])
 def register():
 
     if request.method == 'POST':
@@ -237,12 +242,12 @@ def register():
                     username, hashed_password)
 
         # print(username, password, hashed_password)
-        return redirect('/')
+        return redirect('/projects/finance/')
 
     return render_template('register.html')
 
 
-@app.route("/sell", methods=["GET", "POST"])
+@bp.route("/sell", methods=["GET", "POST"])
 @login_required
 def sell():
     """Sell shares of stock"""
@@ -280,6 +285,11 @@ def sell():
         db.execute('UPDATE users SET cash = cash + ? WHERE id = ?',
                     sell_price, session['user_id'])
 
-        return redirect('/')
+        return redirect('/projects/finance')
 
     return render_template('sell.html', shares=shares)
+
+
+
+
+app.register_blueprint(bp, url_prefix='/projects/finance')
