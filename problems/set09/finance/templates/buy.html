@@ -3,10 +3,10 @@
 {% block title %} Log In {% endblock %} {% block main %}
 <form
 	autocomplete="off"
-	action="/buy"
+	action="/projects/finance/buy"
 	method="post"
-	class="container bg-white position-relative p-0"
-	style="width: 400px"
+	class="container bg-white position-relative p-0 input-center"
+	
 >
 	<div class="row">
 		<div class="col-md m-auto">
@@ -47,10 +47,10 @@
 			
 		</div>
 	</div>
-	<button class="btn btn-primary mt-3" type="submit">Buy Share(s)</button>
+	<button class="btn btn-primary mt-3 w-100" type="submit">Buy Share(s)</button>
 </form>
 
 
 <script type="text/javascript">window.data = '{{data.result|tojson}}'</script>
-<script src="/static/main.js"></script>
+<script src="/projects/finance/static/main.js"></script>
 {% endblock %}

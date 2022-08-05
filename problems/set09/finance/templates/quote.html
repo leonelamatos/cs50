@@ -7,10 +7,10 @@
 {% block title %} Log In {% endblock %} {% block main %}
 <form
 	autocomplete="off"
-	action="/quote"
+	action="/projects/finance/quote"
 	method="post"
-	class="container bg-white position-relative p-0"
-	style="width: 400px"
+	class="container bg-white position-relative p-0 input-center form-control-group"
+	
 >
 	<div class="row">
 		<div class="col-md m-auto">
@@ -37,12 +37,12 @@
 			</div>
 		</div>
 	</div>
-	<button class="btn btn-primary mt-3" type="submit">Quote</button>
+	<button class="btn btn-primary mt-3 w-100" type="submit">Quote</button>
 </form>
 {% if requested_quote %}
 <p class="fs-6 mt-3 px-0 w-100">A share of {{requested_quote.name}} ({{ requested_quote.symbol}}) costs {{usd(requested_quote.price)}}</p>
 {% endif%}
 
 <script type="text/javascript">window.data = '{{data.result|tojson}}'</script>
-<script src="/static/main.js"></script>
+<script src="/projects/finance/static/main.js"></script>
 {% endblock %}
